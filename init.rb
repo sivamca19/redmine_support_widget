@@ -7,6 +7,9 @@ Redmine::Plugin.register :redmine_support_widget do
   author_url 'https://github.com/sivamca19'
 
 
-  menu :admin_menu, :chat_widgets, { controller: 'support_widgets', action: 'index' },
-     caption: 'Support Widgets', html: { class: 'icon' }
+  menu :admin_menu, :chat_widgets,
+    { controller: 'support_widgets', action: 'index' },
+    caption: "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' class='s18 icon-svg'>
+                <path d='M4 4h16v12H5.17L4 17.17V4z'/>
+              </svg> Support Widgets".html_safe
 end
