@@ -1,0 +1,91 @@
+(function() {
+  // Create the floating button
+  var btn = document.createElement('div');
+  btn.innerHTML = '💬 Support';
+  btn.style.cssText = "position:fixed;bottom:20px;right:20px;background:#007bff;color:#fff;padding:10px 15px;border-radius:20px;cursor:pointer;z-index:99999;font-family:sans-serif;";
+  document.body.appendChild(btn);
+
+  // Create the chat window (hidden by default)
+  var chat = document.createElement('div');
+  chat.style.cssText = "display:none;position:fixed;bottom:70px;right:20px;width:300px;height:400px;background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.2);z-index:99999;font-family:sans-serif;overflow:hidden;";
+
+  chat.innerHTML = `
+    <div style="background:#007bff;color:#fff;padding:10px;font-weight:bold;display:flex;justify-content:space-between;align-items:center;">
+      <span>Support Ticket</span>
+      <button id="support_close" style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer;">×</button>
+    </div>
+    <div id="support_body" style="padding:10px;height:300px;overflow-y:auto;">
+      <label>Subject:</label><br>
+      <input id="support_subject" style="width:100%;margin-bottom:10px;padding:5px;"><br>
+      <label>Description:</label><br>
+      <textarea id="support_description" style="width:100%;height:120px;padding:5px;"></textarea>
+      <div id="support_message" style="margin-top:10px;color:green;font-weight:bold;display:none;"></div>
+      <div style="padding:10px;text-align:right;margin-top:30px;">
+        <button id="support_submit" style="background:#28a745;color:#fff;padding:5px 10px;margin-bottom:5px;border:none;border-radius:5px;cursor:pointer;">Create</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(chat);
+
+  var closeBtn = document.getElementById('support_close');
+
+  // Floating button toggles chat
+  btn.onclick = function() {
+    chat.style.display = (chat.style.display === 'none') ? 'block' : 'none';
+  };
+
+  // Close chat completely
+  closeBtn.onclick = function() {
+    chat.style.display = "none";
+  };
+
+  // Handle ticket submission
+  document.getElementById('support_submit').onclick = function() {
+    var subject = document.getElementById('support_subject').value.trim();
+    var description = document.getElementById('support_description').value.trim();
+    var msgBox = document.getElementById('support_message');
+
+    if (!subject || !description) {
+      msgBox.style.display = "block";
+      msgBox.style.color = "red";
+      msgBox.innerHTML = "Please enter subject and description.";
+      return;
+    }
+
+    // Capture extra info
+    var pageUrl = window.location.href;
+    var userAgent = navigator.userAgent;
+
+    fetch("<%= create_ticket_by_token_url(@widget.token) %>", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        subject: subject,
+        description: description,
+        page_url: pageUrl,
+        user_agent: userAgent
+      })
+    }).then(res => res.json())
+      .then(data => {
+        if (data.id) {
+          msgBox.style.display = "block";
+          msgBox.style.color = "green";
+          msgBox.innerHTML = "✅ Ticket #" + data.id + " created successfully!";
+          document.getElementById('support_subject').value = "";
+          document.getElementById('support_description').value = "";
+
+          // Auto-close after 2 seconds
+          setTimeout(function() {
+            chat.style.display = "none";
+            msgBox.style.display = "none";
+          }, 2000);
+        } else {
+          throw new Error(data.error || "Unknown error");
+        }
+      }).catch(err => {
+        msgBox.style.display = "block";
+        msgBox.style.color = "red";
+        msgBox.innerHTML = "❌ Error: " + err.message;
+      });
+  };
+})();

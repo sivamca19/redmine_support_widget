@@ -1,0 +1,51 @@
+<div>
+  <%= title  [l(:label_support_widget), support_widgets_path], "Show" %>
+  <div class="contextual">
+    <%= link_to 'Edit', edit_support_widget_path(@support_widget) %> |
+    <%= link_to 'Delete', support_widget_path(@support_widget), method: :delete, data: { confirm: 'Are you sure?' } %> |
+    <%= link_to 'Generate Script', generate_script_support_widget_path(@support_widget) %>
+  </div>
+
+  <div id="configure-data">
+    <table class="list">
+      <tr>
+        <td>Name</td>
+        <td><%= @support_widget.name %></td>
+      </tr>
+      <tr>
+        <td>Project</td>
+        <td><%= @support_widget.project&.name %></td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td><%= @support_widget.status&.name %></td>
+      </tr>
+      <tr>
+        <td>Tracker</td>
+        <td><%= @support_widget.tracker&.name %></td>
+      </tr>
+      <tr>
+        <td>Created At</td>
+        <td><%= format_time(@support_widget.created_at) %></td>
+      </tr>
+      <tr>
+        <td>Script</td>
+        <td>
+          <pre id="embed_code_block"><code class="language-html"><%= h(@support_widget.embed_code) %></code></pre>
+          <button onclick="copyEmbedCode()" style="cursor:pointer;">Copy</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<script>
+  function copyEmbedCode() {
+    const codeBlock = document.getElementById("embed_code_block").innerText;
+    navigator.clipboard.writeText(codeBlock.trim()).then(() => {
+      alert("Copied!");
+    }).catch(err => {
+      alert("Failed to copy: " + err);
+    });
+  }
+</script>

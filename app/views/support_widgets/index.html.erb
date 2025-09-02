@@ -1,0 +1,36 @@
+<div class="contextual">
+  <%= link_to "New Widget", new_support_widget_path, class: 'icon icon-add' %>
+</div>
+<h2>Generated Support Widgets</h2>
+
+<table class="list">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Project</th>
+      <th>Status</th>
+      <th>Tracker</th>
+      <th>Priority</th>
+      <th>Created</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @support_widgets.each do |widget| %>
+      <tr>
+        <td><%= widget.name %></td>
+        <td><%= widget.project.name %></td>
+        <td><%= widget.status&.name %></td>
+        <td><%= widget.tracker&.name %></td>
+        <td><%= widget.priority&.name %></td>
+        <td><%= format_time(widget.created_at)%></td>
+        <td>
+          <%= link_to 'Show', support_widget_path(widget) %> |
+          <%= link_to 'Edit', edit_support_widget_path(widget) %> |
+          <%= link_to 'Delete', support_widget_path(widget), method: :delete, data: { confirm: 'Are you sure?' } %> |
+          <%= link_to 'Generate Script', generate_script_support_widget_path(widget) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

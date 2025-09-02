@@ -1,0 +1,40 @@
+<%= title  [l(:label_support_widget), support_widgets_path],
+          (@support_widget.new_record? ? l(:label_new) : l(:label_edit)) %>
+
+<%= error_messages_for(@provider)%>
+<%= form_with(model: @support_widget, local: true, html: { class: "tabular" }) do |f| %>
+  <div class="box">
+    <p>
+      <%= f.label :name, "Widget Name" %>
+      <%= f.text_field :name, required: true %>
+    </p>
+
+    <p>
+      <%= f.label :project_id, "Project" %>
+      <%= f.collection_select :project_id, Project.all, :id, :name,
+          { prompt: "--- Select Project ---" }, { required: true } %>
+    </p>
+
+    <p>
+      <%= f.label :tracker_id, "Tracker" %>
+      <%= f.collection_select :tracker_id, Tracker.all, :id, :name,
+          { prompt: "--- Select Tracker ---" }, { required: true } %>
+    </p>
+
+    <p>
+      <%= f.label :status_id, "Default Status" %>
+      <%= f.collection_select :status_id, IssueStatus.all, :id, :name,
+          { prompt: "--- Select Status ---" }, { required: true } %>
+    </p>
+
+    <p>
+      <%= f.label :priority_id, "Default Priority" %>
+      <%= f.collection_select :priority_id, IssuePriority.all, :id, :name,
+          { prompt: "--- Select Priority ---" }, { required: true } %>
+    </p>
+  </div>
+
+  <div class="actions">
+    <%= f.submit l(:button_save),class: "button" %>
+  </div>
+<% end %>
