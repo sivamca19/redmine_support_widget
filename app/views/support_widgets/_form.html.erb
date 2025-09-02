@@ -32,6 +32,12 @@
       <%= f.collection_select :priority_id, IssuePriority.all, :id, :name,
           { prompt: "--- Select Priority ---" }, { required: true } %>
     </p>
+
+    <p>
+      <%= f.label :assigned_to_id, "Assign To" %>
+      <%= f.collection_select :assigned_to_id, User.active, :id, :name,
+          { include_blank: true } %>
+    </p>
   </div>
 
   <div class="actions">

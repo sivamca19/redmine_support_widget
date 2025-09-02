@@ -66,6 +66,7 @@ class SupportWidgetsController < ApplicationController
     issue.tracker_id = @support_widget.tracker_id if @support_widget.tracker_id.present?
     issue.status_id  = @support_widget.status_id if @support_widget.status_id.present?
     issue.priority_id = @support_widget.priority_id if @support_widget.priority_id.present?
+    issue.assigned_to_id = @support_widget.assigned_to_id if @support_widget.assigned_to_id.present?
     issue.subject = subject
     desc_lines = []
     desc_lines << description
@@ -100,7 +101,7 @@ class SupportWidgetsController < ApplicationController
   end
 
   def support_widget_params
-    params.require(:support_widget).permit(:name, :project_id, :status_id, :tracker_id, :priority_id, :embed_code)
+    params.require(:support_widget).permit(:name, :project_id, :status_id, :tracker_id, :priority_id, :assigned_to_id, :embed_code)
   end
 
   def generate_script_code(widget)

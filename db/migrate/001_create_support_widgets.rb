@@ -6,6 +6,7 @@ class CreateSupportWidgets < ActiveRecord::Migration[6.1]
       t.integer :tracker_id
       t.integer :status_id
       t.integer :priority_id
+      t.integer :assigned_to_id
       t.text :embed_code
       t.string :token, unique: true
 
